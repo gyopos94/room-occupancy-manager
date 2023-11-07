@@ -1,4 +1,6 @@
 package com.beusable.roomoccupancymanager.dto;
 
-public record AvailableRoom(String roomType, Integer amount) {
+import java.util.Map;
+
+public record AvailableRoom(Map<String, Integer> rooms) {
 }
