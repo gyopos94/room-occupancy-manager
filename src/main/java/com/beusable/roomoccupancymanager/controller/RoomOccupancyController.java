@@ -32,7 +32,9 @@ public class RoomOccupancyController {
         //hardcoded for POC, we could add an other endpoint what gives you the customers for the night, and we could save them into db
         List<Double> customers = Arrays.asList(23.0, 45.0, 155.0, 374.0, 22.0, 99.99, 100.0, 101.0, 115.0, 209.0);
         RevenueMap revenueMap = roomBookingService.calculateRevenue(customers, availableRoom);
-
+        if (revenueMap == null) {
+            throw new RoomOccupancyException("Server error");
+        }
         return new ResponseEntity<>(revenueMap, HttpStatus.OK);
     }
 }

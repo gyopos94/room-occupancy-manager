@@ -4,12 +4,13 @@ import com.beusable.roomoccupancymanager.dao.Room;
 import com.beusable.roomoccupancymanager.dto.*;
 import com.beusable.roomoccupancymanager.repository.RoomRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 
 //todo check service again, to simplify if possible
 @Service
-public class RoomBookingService {
+public final class RoomBookingService implements RoomBookingServiceInterface {
 
     private final RoomRepository roomRepository;
 
@@ -28,6 +29,11 @@ public class RoomBookingService {
 
         // Retrieve room types from the repository
         List<Room> roomTypes = roomRepository.findAll();
+
+        if (CollectionUtils.isEmpty(roomTypes) || CollectionUtils.isEmpty(customers)
+                || CollectionUtils.isEmpty(availableRoomMap.rooms())) {
+            return null;
+        }
 
         // Get the minimum price for premium and economy rooms, later if we have more type of rooms, we can adjust the logic
         int premiumMinPrice = getMinPriceForRoomType(roomTypes, "premium");
@@ -88,7 +94,8 @@ public class RoomBookingService {
     }
 
     // Helper method to handle room upgrades
-    private int handleUpgrades(List<Double> economyCustomers, int economyRooms, int premiumOccupied, List<Double> topPremiumCustomers, int isUpgrade) {
+    private int handleUpgrades(List<Double> economyCustomers, int economyRooms, int premiumOccupied,
+                               List<Double> topPremiumCustomers, int isUpgrade) {
         if (isUpgrade > 0 && economyCustomers.size() > economyRooms) {
             int upgradeEconomyCustomers = Math.min(isUpgrade, economyCustomers.size());
             List<Double> topEconomyCustomers = economyCustomers.subList(0, upgradeEconomyCustomers);
