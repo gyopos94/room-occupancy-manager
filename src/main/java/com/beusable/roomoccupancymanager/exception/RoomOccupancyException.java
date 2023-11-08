@@ -1,8 +1,16 @@
 package com.beusable.roomoccupancymanager.exception;
 
+import org.springframework.http.HttpStatus;
+
 public class RoomOccupancyException extends RuntimeException {
-    public RoomOccupancyException(String message) {
+    private final HttpStatus httpStatus;
+
+    public RoomOccupancyException(String message, HttpStatus httpStatus) {
         super(message);
+        this.httpStatus = httpStatus;
+    }
+
+    public HttpStatus getHttpStatus() {
+        return httpStatus;
     }
 }
-

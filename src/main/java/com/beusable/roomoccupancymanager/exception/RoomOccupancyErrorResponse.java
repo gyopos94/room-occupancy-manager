@@ -1,19 +1,21 @@
 package com.beusable.roomoccupancymanager.exception;
 
-public class RoomOccupancyErrorResponse {
-    private String message;
-    private int status;
+import org.springframework.http.HttpStatus;
 
-    public RoomOccupancyErrorResponse(String message, int status) {
-        this.message = message;
+public class RoomOccupancyErrorResponse {
+    private final HttpStatus status;
+    private final String message;
+
+    public RoomOccupancyErrorResponse(HttpStatus status, String message) {
         this.status = status;
+        this.message = message;
+    }
+
+    public HttpStatus getStatus() {
+        return status;
     }
 
     public String getMessage() {
         return message;
-    }
-
-    public int getStatus() {
-        return status;
     }
 }

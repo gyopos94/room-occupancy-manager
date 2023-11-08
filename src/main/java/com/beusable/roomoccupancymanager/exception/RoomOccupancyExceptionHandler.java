@@ -10,7 +10,15 @@ public class RoomOccupancyExceptionHandler {
 
     @ExceptionHandler(RoomOccupancyException.class)
     public ResponseEntity<RoomOccupancyErrorResponse> handleRoomOccupancyException(RoomOccupancyException ex) {
-        RoomOccupancyErrorResponse errorResponse = new RoomOccupancyErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        HttpStatus httpStatus = ex.getHttpStatus();
+        RoomOccupancyErrorResponse errorResponse = new RoomOccupancyErrorResponse(httpStatus, ex.getMessage());
+        return new ResponseEntity<>(errorResponse, httpStatus);
+    }
+
+    @ExceptionHandler(Exception.class)
+    protected ResponseEntity<RoomOccupancyErrorResponse> handleGenericException(Exception ex) {
+        HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+        RoomOccupancyErrorResponse apiError = new RoomOccupancyErrorResponse(httpStatus, ex.getMessage());
+        return new ResponseEntity<>(apiError, httpStatus);
     }
 }
