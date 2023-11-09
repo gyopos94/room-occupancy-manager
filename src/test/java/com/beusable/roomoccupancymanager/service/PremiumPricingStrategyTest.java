@@ -27,9 +27,6 @@ public class PremiumPricingStrategyTest {
     @Mock
     private RoomRepository roomRepository;
 
-    @Mock
-    private PremiumPricingStrategy pricingStrategy;
-
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
