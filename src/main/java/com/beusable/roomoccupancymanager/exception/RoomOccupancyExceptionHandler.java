@@ -11,14 +11,14 @@ public class RoomOccupancyExceptionHandler {
     @ExceptionHandler(RoomOccupancyException.class)
     public ResponseEntity<RoomOccupancyErrorResponse> handleRoomOccupancyException(RoomOccupancyException ex) {
         HttpStatus httpStatus = ex.getHttpStatus();
-        RoomOccupancyErrorResponse errorResponse = new RoomOccupancyErrorResponse(httpStatus, ex.getMessage());
+        RoomOccupancyErrorResponse errorResponse = new RoomOccupancyErrorResponse(ex.getMessage());
         return new ResponseEntity<>(errorResponse, httpStatus);
     }
 
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<RoomOccupancyErrorResponse> handleGenericException(Exception ex) {
         HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-        RoomOccupancyErrorResponse apiError = new RoomOccupancyErrorResponse(httpStatus, ex.getMessage());
+        RoomOccupancyErrorResponse apiError = new RoomOccupancyErrorResponse(ex.getMessage());
         return new ResponseEntity<>(apiError, httpStatus);
     }
 }

@@ -2,7 +2,9 @@ package com.beusable.roomoccupancymanager.service;
 
 import com.beusable.roomoccupancymanager.dao.Room;
 import com.beusable.roomoccupancymanager.dto.*;
+import com.beusable.roomoccupancymanager.exception.RoomOccupancyException;
 import com.beusable.roomoccupancymanager.repository.RoomRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -27,13 +29,14 @@ public final class RoomBookingService implements RoomBookingServiceInterface {
      */
     public RevenueMap calculateRevenue(List<Double> customers, AvailableRoom availableRoomMap) {
 
+        if (CollectionUtils.isEmpty(customers) || CollectionUtils.isEmpty(availableRoomMap.rooms()))
+            throw new RoomOccupancyException("No customers or availableRoomMap", HttpStatus.INTERNAL_SERVER_ERROR);
+
         // Retrieve room types from the repository
         List<Room> roomTypes = roomRepository.findAll();
+        if(CollectionUtils.isEmpty(roomTypes))
+            throw new RoomOccupancyException("No rooms available", HttpStatus.INTERNAL_SERVER_ERROR);
 
-        if (CollectionUtils.isEmpty(roomTypes) || CollectionUtils.isEmpty(customers)
-                || CollectionUtils.isEmpty(availableRoomMap.rooms())) {
-            return null;
-        }
 
         // Get the minimum price for premium and economy rooms, later if we have more type of rooms, we can adjust the logic
         int premiumMinPrice = getMinPriceForRoomType(roomTypes, "premium");
