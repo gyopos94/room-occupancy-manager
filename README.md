@@ -39,18 +39,17 @@ Already have controller and service tests, but if you would like to test the cas
 ● (output) Usage Premium: 3 (EUR 738)  
 ● (output) Usage Economy: 3 (EUR 167.99)
 
-
-    curl -X 'GET' \  
-    'http://localhost:8080/api/revenue/available-rooms' \  
-    -H 'Content-Type: application/json' \  
-    -d '{  
-    "rooms": {  
-    "premium": 3,  
-    "economy": 3  
-    }  
-    }'  
-
-
+```
+curl -X 'GET' \
+'http://localhost:8080/api/revenue/available-rooms' \
+-H 'Content-Type: application/json' \
+-d '{
+"rooms": {
+"premium": 3,
+"economy": 3
+}
+}'
+```
 
 ## Test 2
 
@@ -59,16 +58,18 @@ Already have controller and service tests, but if you would like to test the cas
 ● (output) Usage Premium: 6 (EUR 1054)  
 ● (output) Usage Economy: 4 (EUR 189.99)
 
+```
+curl -X 'GET' \
+'http://localhost:8080/api/revenue/available-rooms' \
+-H 'Content-Type: application/json' \
+-d '{
+"rooms": {
+"premium": 7,
+"economy": 5
+}
+}'
+```
 
-    curl -X 'GET' \  
-    'http://localhost:8080/api/revenue/available-rooms' \  
-    -H 'Content-Type: application/json' \  
-    -d '{  
-    "rooms": {  
-    "premium": 7,  
-    "economy": 5  
-    }  
-    }'  
 
 
 
@@ -81,16 +82,17 @@ Already have controller and service tests, but if you would like to test the cas
 ● (output) Usage Economy: 4 (EUR 189.99)
 
 
-
-    curl -X 'GET' \  
-    'http://localhost:8080/api/revenue/available-rooms' \  
-    -H 'Content-Type: application/json' \  
-    -d '{  
-    "rooms": {  
-    "premium": 2,  
-    "economy": 7  
-    }  
-    }'  
+```
+curl -X 'GET' \
+'http://localhost:8080/api/revenue/available-rooms' \
+-H 'Content-Type: application/json' \
+-d '{
+"rooms": {
+"premium": 2,
+"economy": 7
+}
+}'
+```
 
 
 
@@ -101,13 +103,14 @@ Already have controller and service tests, but if you would like to test the cas
 ● (output) Usage Premium: 7 (EUR 1153)  
 ● (output) Usage Economy: 1 (EUR 45.99)
 
-
-    curl -X 'GET' \  
-    'http://localhost:8080/api/revenue/available-rooms' \  
-    -H 'Content-Type: application/json' \  
-    -d '{  
-    "rooms": {  
-    "premium": 7,  
-    "economy": 1  
-    }  
-    }'
+```
+curl -X 'GET' \
+'http://localhost:8080/api/revenue/available-rooms' \
+-H 'Content-Type: application/json' \
+-d '{
+"rooms": {
+"premium": 7,
+"economy": 1
+}
+}'
+```
