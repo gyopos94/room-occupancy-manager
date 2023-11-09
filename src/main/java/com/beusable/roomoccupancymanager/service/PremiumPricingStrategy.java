@@ -10,7 +10,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public final class PremiumPricingStrategy implements PricingStrategy {
@@ -28,22 +32,23 @@ public final class PremiumPricingStrategy implements PricingStrategy {
      * @return A RevenueMap object that represents the revenue generated from premium and economy rooms.
      */
     public RevenueMap calculateRevenue(List<Double> customers, AvailableRoom availableRoomMap) {
-
-        if (CollectionUtils.isEmpty(customers) || CollectionUtils.isEmpty(availableRoomMap.rooms()))
+        if (CollectionUtils.isEmpty(customers) || CollectionUtils.isEmpty(availableRoomMap.rooms())) {
             throw new RoomOccupancyException("No customers or availableRoomMap", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
         // Retrieve room types from the repository
         List<Room> roomTypes = roomRepository.findAll();
-        if (CollectionUtils.isEmpty(roomTypes))
+        if (CollectionUtils.isEmpty(roomTypes)) {
             throw new RoomOccupancyException("No rooms available", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
-
-        // Get the minimum price for premium and economy rooms, later if we have more type of rooms, we can adjust the logic
+        // Get the minimum price for premium rooms
         int premiumMinPrice = getMinPriceForRoomType(roomTypes, "premium");
 
         // Separate customers into premium and economy lists
         List<Double> premiumCustomers = new ArrayList<>();
         List<Double> economyCustomers = new ArrayList<>();
+
         for (Double number : customers) {
             if (number >= premiumMinPrice) {
                 premiumCustomers.add(number);
@@ -57,8 +62,8 @@ public final class PremiumPricingStrategy implements PricingStrategy {
         int economyRooms = availableRoomMap.rooms().get("economy");
 
         // Sort the premium and economy customer lists in descending order
-        Collections.sort(premiumCustomers, Collections.reverseOrder());
-        Collections.sort(economyCustomers, Collections.reverseOrder());
+        premiumCustomers.sort(Collections.reverseOrder());
+        economyCustomers.sort(Collections.reverseOrder());
 
         // Calculate the number of premium rooms occupied
         int premiumOccupied = Math.min(premiumRooms, premiumCustomers.size());
@@ -92,13 +97,11 @@ public final class PremiumPricingStrategy implements PricingStrategy {
         revenueMapTemp.put("premium", new Revenue(premiumOccupied, premiumRevenue));
         revenueMapTemp.put("economy", new Revenue(economyOccupied, economyRevenue));
 
-        RevenueMap revenueMap = new RevenueMap(revenueMapTemp);
-        return revenueMap;
+        return new RevenueMap(revenueMapTemp);
     }
 
     // Helper method to handle room upgrades
-    private int handleUpgrades(List<Double> economyCustomers, int economyRooms, int premiumOccupied,
-                               List<Double> topPremiumCustomers, int isUpgrade) {
+    private int handleUpgrades(List<Double> economyCustomers, int economyRooms, int premiumOccupied, List<Double> topPremiumCustomers, int isUpgrade) {
         if (isUpgrade > 0 && economyCustomers.size() > economyRooms) {
             int upgradeEconomyCustomers = Math.min(isUpgrade, economyCustomers.size());
             List<Double> topEconomyCustomers = economyCustomers.subList(0, upgradeEconomyCustomers);
@@ -113,18 +116,15 @@ public final class PremiumPricingStrategy implements PricingStrategy {
 
     // Helper method to get the minimum price for a room type
     private int getMinPriceForRoomType(List<Room> rooms, String roomType) {
-        for (Room room : rooms) {
-            if (room.getType().equalsIgnoreCase(roomType)) {
-                return room.getMinPrice();
-            }
-        }
-        return 0;
+        return rooms.stream()
+                .filter(room -> room.getType().equalsIgnoreCase(roomType))
+                .map(Room::getMinPrice)
+                .findFirst()
+                .orElse(0);
     }
 
     // Helper method to calculate revenue from customers
     private double calculateRevenueFromCustomers(List<Double> customers) {
-        return customers.stream()
-                .mapToDouble(Double::doubleValue)
-                .sum();
+        return customers.stream().mapToDouble(Double::doubleValue).sum();
     }
 }
