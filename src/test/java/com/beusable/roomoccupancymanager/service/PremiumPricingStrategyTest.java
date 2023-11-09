@@ -5,7 +5,6 @@ import com.beusable.roomoccupancymanager.dto.AvailableRoom;
 import com.beusable.roomoccupancymanager.dto.RevenueMap;
 import com.beusable.roomoccupancymanager.repository.RoomRepository;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.InjectMocks;
@@ -20,13 +19,16 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-public class RoomBookingServiceTest {
+public class PremiumPricingStrategyTest {
 
     @InjectMocks
-    private RoomBookingService roomBookingService;
+    private PremiumPricingStrategy premiumPricingStrategy;
 
     @Mock
     private RoomRepository roomRepository;
+
+    @Mock
+    private PremiumPricingStrategy pricingStrategy;
 
     @BeforeEach
     public void setUp() {
@@ -68,7 +70,7 @@ public class RoomBookingServiceTest {
         when(roomRepository.findAll()).thenReturn(Arrays.asList(room1, room2));
 
         // Act
-        RevenueMap revenueMap = roomBookingService.calculateRevenue(customers, availableRoom);
+        RevenueMap revenueMap = premiumPricingStrategy.calculateRevenue(customers, availableRoom);
 
         // Assert
         verify(roomRepository, times(1)).findAll();

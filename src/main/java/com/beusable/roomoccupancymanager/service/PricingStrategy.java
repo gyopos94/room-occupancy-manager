@@ -5,6 +5,6 @@ import com.beusable.roomoccupancymanager.dto.RevenueMap;
 
 import java.util.List;
 
-public sealed interface RoomBookingServiceInterface permits RoomBookingService{
-    RevenueMap calculateRevenue(List<Double> customers, AvailableRoom availableRoomList);
+public interface PricingStrategy {
+    RevenueMap calculateRevenue(List<Double> customers, AvailableRoom availableRoomMap);
 }
