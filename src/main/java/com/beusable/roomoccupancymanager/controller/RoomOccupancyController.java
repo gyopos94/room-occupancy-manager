@@ -4,11 +4,6 @@ import com.beusable.roomoccupancymanager.dto.AvailableRoom;
 import com.beusable.roomoccupancymanager.dto.RevenueMap;
 import com.beusable.roomoccupancymanager.exception.RoomOccupancyException;
 import com.beusable.roomoccupancymanager.service.RoomBookingServiceInterface;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,34 +24,6 @@ public class RoomOccupancyController {
         this.roomBookingService = roomBookingService;
     }
 
-    @Operation(
-            summary = "Calculate Revenue",
-            description = "Calculate revenue based on available rooms and a list of customers. The input should be provided as an `AvailableRoom` object, and the response will be a `RevenueMap` detailing the revenue generated for different room types."
-    )
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Revenue calculation successful",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = RevenueMap.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Bad request - The input is missing or invalid",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = RoomOccupancyException.class)
-                    )
-            ),
-            @ApiResponse(responseCode = "500", description = "Internal server error",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = RoomOccupancyException.class)
-                    )
-            )
-    })
     @GetMapping("/available-rooms")
     public ResponseEntity<RevenueMap> getRevenue(@RequestBody AvailableRoom availableRoom) {
         if (availableRoom == null) {
